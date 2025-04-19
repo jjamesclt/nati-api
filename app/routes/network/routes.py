@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify
+from flask import request
 from flask_restful import Api, Resource
+import hashlib
 import pymysql
 import configparser
 
@@ -19,8 +21,23 @@ db_config = {
     'database': config['database']['database']
 }
 
+def is_valid_api_key(api_key):
+    key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+    try:
+        conn = pymysql.connect(**db_config)
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM nati_api_key WHERE api_key_hash = %s AND active = 1", (key_hash,))
+        return cursor.fetchone() is not None
+    finally:
+        cursor.close()
+        conn.close()
+
 class Devices(Resource):
     def get(self):
+        api_key = request.headers.get("x-api-key")
+        if not api_key or not is_valid_api_key(api_key):
+            return {"error": "Unauthorized"}, 401
+        
         try:
             conn = pymysql.connect(**db_config)
             cursor = conn.cursor(pymysql.cursors.DictCursor)
