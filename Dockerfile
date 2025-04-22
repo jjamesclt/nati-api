@@ -10,8 +10,20 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy rest of the application
+# Install OpenSSL for certificate generation
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+# Copy application code
 COPY . .
 
-# Default command to run your script
+# Ensure script has execution permissions
+RUN chmod +x /app/generate-csr.sh
+
+# Create cert directory
+RUN mkdir -p /certs
+
+# Default port for Flask with HTTPS (internal)
+EXPOSE 5000
+
+# Command to run the app
 CMD ["python", "run.py"]

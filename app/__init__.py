@@ -15,7 +15,7 @@ api = Api(app)
 # Optional welcome route
 @app.route('/')
 def hello():
-    return "Hello World - Welcome to NATI API!"
+    return "Welcome to NATI API!"
 
 # Header parser for APIs
 key_parser = reqparse.RequestParser()
