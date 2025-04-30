@@ -1,24 +1,27 @@
 from flask import Blueprint, jsonify
 from flask import request
 from flask_restful import Api, Resource
+from .mac_lookup import mac_lookup_bp
 import hashlib
 import pymysql
-import configparser
+#import configparser
+from nati.config_manager import ConfigManager
 
 # Blueprint setup
 network_bp = Blueprint('network', __name__, url_prefix='/api/network')
 api = Api(network_bp)
 
 # Load DB credentials
-config = configparser.ConfigParser()
-config.read('nati.ini')
+#config = configparser.ConfigParser()
+config = ConfigManager()
+#config.read('nati.ini')
 
 db_config = {
-    'host': config['database']['host'],
-    'port': int(config['database']['port']),
-    'user': config['database']['username'],
-    'password': config['database']['password'],
-    'database': config['database']['database']
+    'host': config.get('database.host'),
+    'port': int(config.get('database.port')),
+    'user': config.get('database.username'),
+    'password': config.get('database.password'),
+    'database': config.get('database.database')
 }
 
 def is_valid_api_key(api_key):
@@ -51,5 +54,6 @@ class Devices(Resource):
                 cursor.close()
                 conn.close()
 
-# Register route
+# Register routes
 api.add_resource(Devices, '/devices')
+api.add_resource(MacLookup, '/mac_lookup/<string:mac_addr>')
