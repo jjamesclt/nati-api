@@ -8,7 +8,7 @@ class MacLookup(Resource):
             oui = self.normalize_mac(mac_addr)
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM network_ouidb WHERE oui = %s", (oui,))
+            cursor.execute("SELECT vendor_name FROM network_ouidb WHERE mac_prefix = %s", (oui,))
             row = cursor.fetchone()
             cursor.close()
             conn.close()
