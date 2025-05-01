@@ -1,7 +1,6 @@
 from flask_restful import Resource
-from flask import jsonify
 import re
-from app.routes.network.db import get_db_connection
+from app.utils.db import get_db_connection  # or wherever you store the helper
 
 class MacLookup(Resource):
     def get(self, mac_addr):
@@ -11,20 +10,16 @@ class MacLookup(Resource):
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM network_ouidb WHERE oui = %s", (oui,))
             row = cursor.fetchone()
+            cursor.close()
+            conn.close()
 
             if row:
                 keys = [desc[0] for desc in cursor.description]
-                result = dict(zip(keys, row))
+                return dict(zip(keys, row))
             else:
-                result = {'message': f'OUI {oui} not found'}
-
-            cursor.close()
-            conn.close()
-            return result
-
+                return {'message': f'OUI {oui} not found'}, 404
         except Exception as e:
             return {'error': str(e)}, 500
 
     def normalize_mac(self, mac):
-        cleaned = re.sub(r'[^0-9A-Fa-f]', '', mac)
-        return cleaned.upper()[0:6]
+        return re.sub(r'[^0-9A-Fa-f]', '', mac).upper()[0:6]

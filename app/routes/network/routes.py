@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from flask import request
 from flask_restful import Api, Resource
-from .mac_lookup import mac_lookup_bp
+from .mac_lookup import MacLookup
 import hashlib
 import pymysql
 #import configparser
