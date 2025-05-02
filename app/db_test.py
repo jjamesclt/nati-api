@@ -1,22 +1,20 @@
 # app/db_test.py
 
+from nati.config_manager import ConfigManager
 import pymysql
-import configparser
 import os
 
 def test_db_connection():
     try:
         # Load the config from the root folder
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'nati.ini')
-        config = configparser.ConfigParser()
-        config.read(config_path)
+        config = ConfigManager()
 
         db_config = {
-            'host': config['database']['host'],
-            'port': int(config['database']['port']),
-            'user': config['database']['username'],
-            'password': config['database']['password'],
-            'database': config['database']['database']
+            'host': config.get('database.host'),
+            'port': int(config.get('database.port')),
+            'user': config.get('database.username'),
+            'password': config.get('database.password'),
+            'database': config.get('database.database'),
         }
 
         # Attempt to connect
