@@ -1,20 +1,20 @@
 from flask import jsonify
 from flask_restful import Resource
-from app.units.cisco_aci import get_fabrics, get_nodes
+from app.units.cisco_aci import get_tenants, get_vrfs
 
-class Fabrics(Resource):
+class Tenants(Resource):
     def get(self):
         try:
-            fabrics = get_fabrics()
-            return jsonify(fabrics)
+            tenants = get_tenants()
+            return jsonify(tenants)
         except Exception as e:
             return {"error": str(e)}, 500
 
 
-class Nodes(Resource):
+class VRFs(Resource):
     def get(self):
         try:
-            nodes = get_nodes()
-            return jsonify(nodes)
+            vrfs = get_vrfs()
+            return jsonify(vrfs)
         except Exception as e:
             return {"error": str(e)}, 500
