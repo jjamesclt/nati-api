@@ -25,14 +25,6 @@ key_parser.add_argument("x-api-key",
                         help="API Key is required",
                         location='headers')
 
-# Network Module
-from app.routes.network.routes import network_bp
-app.register_blueprint(network_bp)
-
-# Cisco ACI Module
-from app.routes.cisco_aci.routes import aci_bp
-app.register_blueprint(aci_bp)
-
 # Utility and Miscellaneous
 from app.routes.db_check import db_check_bp
 app.register_blueprint(db_check_bp)

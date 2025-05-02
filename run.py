@@ -1,5 +1,13 @@
-import os
-from app import app
+from flask import Flask
+from app.routes import register_blueprints
+
+app = Flask(__name__)
+register_blueprints(app)
+
+@app.route("/")
+def index():
+    return {"message": "Welcome to the NATI API"}, 200
+
 
 if __name__ == "__main__":
     '''
