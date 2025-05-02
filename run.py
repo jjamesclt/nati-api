@@ -1,5 +1,6 @@
 from flask import Flask
 from app.routes import register_blueprints
+import os
 
 app = Flask(__name__)
 register_blueprints(app)
@@ -10,8 +11,7 @@ def index():
 
 
 if __name__ == "__main__":
-    '''
-    TEST
+    #TEST
     cert_path = "/certs/server.crt"
     key_path = "/certs/server.key"
 
@@ -22,3 +22,4 @@ if __name__ == "__main__":
     '''
     #DEV
     app.run(host="0.0.0.0", port=5000)
+    '''
